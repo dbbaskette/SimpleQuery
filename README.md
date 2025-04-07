@@ -110,6 +110,7 @@ public class WebConfig implements WebMvcConfigurer {
             .allowedOrigins("https://your-domain.com")
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
+            .exposedHeaders("X-Forwarded-For", "X-Forwarded-Proto", "CF-Connecting-IP", "CF-IPCountry", "CF-RAY")
             .allowCredentials(true);
     }
 }
@@ -130,6 +131,11 @@ curl -X DELETE \
   -H "X-Forwarded-For: $(curl -s ifconfig.me)" \
   https://your-domain.com/api/products/1
 ```
+
+Note: If you receive a Cloudflare challenge page, you may need to:
+1. Wait a few minutes for configuration changes to propagate
+2. Access the API through a browser first to complete the Cloudflare challenge
+3. Consider adding your IP address to Cloudflare's allowlist for development environments
 
 ## License
 
