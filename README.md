@@ -10,7 +10,8 @@ A Spring Boot application that demonstrates Spring Data JPA integration with SQL
 - Environment variable-based configuration
 - RESTful API endpoints
 - Sample entity, repository, service, and controller implementation
-- Profile-specific configurations (dev, prod)
+- Profile-specific configurations (dev, prod, cloud)
+- Cloud Foundry deployment support with java-cfenv
 
 ## Project Structure
 
@@ -36,7 +37,7 @@ The application uses the following environment variables:
 
 | Variable | Description | Default Value |
 |----------|-------------|---------------|
-| SPRING_PROFILES_ACTIVE | Active profile (dev or prod) | dev |
+| SPRING_PROFILES_ACTIVE | Active profile (dev, prod, or cloud) | dev |
 | DB_USERNAME | Database username | sa (H2), postgres (PostgreSQL) |
 | DB_PASSWORD | Database password | (empty for H2) |
 | DB_HOST | Database host (prod only) | localhost |
@@ -45,7 +46,7 @@ The application uses the following environment variables:
 | DB_DDL_AUTO | Hibernate DDL auto setting | update |
 | DB_SHOW_SQL | Show SQL statements | true |
 | DB_FORMAT_SQL | Format SQL statements | true |
-| SERVER_PORT | Application server port | 8080 |
+| PORT | Application server port | 8080 |
 | DB_MAX_POOL_SIZE | Connection pool max size (prod only) | 10 |
 | DB_MIN_IDLE | Connection pool min idle (prod only) | 5 |
 | DB_IDLE_TIMEOUT | Connection idle timeout in ms (prod only) | 30000 |
@@ -77,6 +78,31 @@ export DB_NAME=simplequery
 # Run the application
 ./mvnw spring-boot:run
 ```
+
+### Cloud Foundry Deployment
+
+The application uses java-cfenv for automatic service binding in Cloud Foundry. To deploy:
+
+1. Create a PostgreSQL service:
+```bash
+cf create-service postgresql standard postgres-db
+```
+
+2. Build the application:
+```bash
+./mvnw clean package
+```
+
+3. Deploy to Cloud Foundry:
+```bash
+cf push
+```
+
+The application will automatically:
+- Use the cloud profile
+- Disable auto-reconfiguration
+- Bind to the PostgreSQL service
+- Configure the database connection using service credentials
 
 ### Using Docker (PostgreSQL)
 

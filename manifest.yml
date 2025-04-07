@@ -1,10 +1,12 @@
 ---
 applications:
-- name: simplequery-mcp-server # Choose a unique name for your app in CF
-  memory: 1G # Adjust memory as needed
-  path: target/SimpleQuery-0.0.1-SNAPSHOT.jar # Path to the built JAR
-  buildpacks:
-    - java_buildpack_offline
+- name: simplequery
+  memory: 1G
+  instances: 1
+  path: target/SimpleQuery-0.0.1-SNAPSHOT.jar
   env:
-    SPRING_PROFILES_ACTIVE: mcp # Activate the MCP profile
-    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 21.+ } }' # Ensure Java 21
+    SPRING_PROFILES_ACTIVE: cloud
+    JBP_CONFIG_SPRING_AUTO_RECONFIGURATION: '{enabled: false}'
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 21.+ } }'
+  services:
+    - postgres-db
