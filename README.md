@@ -12,6 +12,7 @@ A Spring Boot application that demonstrates Spring Data JPA integration with SQL
 - Sample entity, repository, service, and controller implementation
 - Profile-specific configurations (dev, prod, cloud)
 - Cloud Foundry deployment support with java-cfenv
+- Sample bicycle shop data with manual loading capability
 
 ## Project Structure
 
@@ -20,9 +21,11 @@ src/main/java/com/baskettecase/SimpleQuery/
 ├── SimpleQueryApplication.java       # Main application class
 ├── config/                           # Configuration classes
 │   ├── DatabaseConfig.java           # Database configuration
-│   └── DataLoader.java               # Sample data loader (dev profile only)
+│   ├── DataLoader.java               # Sample data loader (dev profile only)
+│   └── BicycleDataLoader.java        # Bicycle shop data loader
 ├── controller/                       # REST controllers
-│   └── ProductController.java        # Product API endpoints
+│   ├── ProductController.java        # Product API endpoints
+│   └── DataLoaderController.java     # Data management endpoints
 ├── entity/                           # JPA entities
 │   └── Product.java                  # Product entity
 ├── repository/                       # Spring Data repositories
@@ -121,6 +124,8 @@ export DB_PASSWORD=your_password
 
 ## API Endpoints
 
+### Product Management
+
 | Method | URL | Description |
 |--------|-----|-------------|
 | GET | /api/products | Get all products |
@@ -131,6 +136,29 @@ export DB_PASSWORD=your_password
 | PUT | /api/products/{id} | Update a product |
 | PATCH | /api/products/{id}/stock?quantity={quantity} | Update product stock |
 | DELETE | /api/products/{id} | Delete a product |
+
+### Data Management
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| POST | /api/admin/load-sample-data | Load sample bicycle shop data |
+| POST | /api/admin/clear-data | Clear all product data |
+
+Example usage:
+```bash
+# Clear existing data
+curl -X POST http://localhost:8080/api/admin/clear-data
+
+# Load sample bicycle shop data
+curl -X POST http://localhost:8080/api/admin/load-sample-data
+```
+
+The sample data includes:
+- Bikes (Mountain, Road, Hybrid)
+- Safety equipment (Helmets)
+- Accessories (Locks, Lights, Water Bottles)
+- Tools (Pumps, Repair Kits)
+- Clothing (Gloves)
 
 ## H2 Console (Development Only)
 
