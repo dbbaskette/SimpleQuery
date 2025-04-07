@@ -13,6 +13,7 @@ A Spring Boot application that demonstrates Spring Data JPA integration with SQL
 - Profile-specific configurations (dev, prod, cloud)
 - Cloud Foundry deployment support with java-cfenv
 - Sample bicycle shop data with manual loading capability
+- CORS and Cloudflare configuration for secure API access
 
 ## Project Structure
 
@@ -171,3 +172,41 @@ http://localhost:8080/h2-console
 JDBC URL: `jdbc:h2:mem:testdb`  
 Username: `sa`  
 Password: (leave empty)
+
+## CORS and Cloudflare Configuration
+
+The application includes configuration for handling requests through Cloudflare:
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")
+            .allowedOrigins("https://simplequery.apps.tas-ndc.kuhn-labs.com")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("*")
+            .allowCredentials(true);
+    }
+}
+```
+
+Application properties for Cloudflare:
+```properties
+server.forward-headers-strategy=framework
+server.tomcat.remoteip.remote-ip-header=x-forwarded-for
+server.tomcat.remoteip.protocol-header=x-forwarded-proto
+server.tomcat.remoteip.internal-proxies=.*
+```
+
+When making API requests through Cloudflare, include the following headers:
+```bash
+curl -X DELETE \
+  -H "X-Forwarded-Proto: https" \
+  -H "X-Forwarded-For: $(curl -s ifconfig.me)" \
+  https://simplequery.apps.tas-ndc.kuhn-labs.com/api/products/1
+```
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
