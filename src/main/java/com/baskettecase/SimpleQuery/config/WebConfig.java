@@ -11,8 +11,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
                 .allowedOrigins("https://simplequery.apps.tas-ndc.kuhn-labs.com")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
+                .exposedHeaders("X-Forwarded-For", "X-Forwarded-Proto", "CF-Connecting-IP", "CF-IPCountry", "CF-RAY")
                 .allowCredentials(true);
     }
 } 
